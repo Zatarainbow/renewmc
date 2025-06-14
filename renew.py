@@ -18,7 +18,7 @@ app = Flask(__name__)
 mcserver_first_success_logged = False
 
 # --- 3. CẤU HÌNH CHO BOT SRYZEN.CLOUD (AFK COIN) ---
-SRYZEN_COOKIE = "connect.sid=s%3A2TJwFP5a3GBUpP-ehazniQDZVRk74t-6.NVGhcZ3tosW2mEbvaKyUEQvZ5uXeXWTaurVu07LGFXg"
+SRYZEN_COOKIE = "connect.sid=s:H4Ez9A0OJuGFm_Ie1gBlYqCh2Ao23PL9.Ds5qVTfAIVBhlzl88gLOkcUtBoDf9lu9xKqw46dKnRI"
 SRYZEN_API_URL = "https://my.sryzen.cloud/api/v5/state"
 SRYZEN_WS_URL = "wss://my.sryzen.cloud/ws"
 SRYZEN_USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0"
