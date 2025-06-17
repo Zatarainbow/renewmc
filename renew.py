@@ -3,6 +3,9 @@ import websockets
 import aiohttp
 import os
 from flask import Flask
+from threading import Thread
+
+app = Flask(__name__)
 
 sryzenhd1={"Cookie":"connect.sid=s%3Af-9bZ9RxC2760zbmTraekOINSQqp2X1u.I0eImANx8Ez5Occa4CCJLxy%2F1gmSaOdYYZmOYL2mdog"}
 sryzenhd2={"Cookie":"connect.sid=s%3ApsoFob1rBrAMB77kCmGe6c_MEL7Mq6fA.dYNcruTX2nkWK08WIl0FBXkfaRi3axCO8pfweFuQk5g"}
@@ -12,31 +15,34 @@ lemem_headers = {
       "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
 }
 
+@app.route("/")
+def index():
+    return "Flask is running"
+
 async def sryzen1():
     try:
         async with websockets.connect("wss://my.sryzen.cloud/ws", extra_headers=sryzenhd1) as ws:
             async for message in ws:
-                print("sryzen:", message)
+                print("sryzen1:", message)
     except Exception as e:
-        print("sryzen1")
+        print("sryzen1 error:", e)
 
 async def sryzen2():
     try:
         async with websockets.connect("wss://my.sryzen.cloud/ws", extra_headers=sryzenhd2) as ws:
             async for message in ws:
-                print("sryzen:", message)
+                print("sryzen2:", message)
     except Exception as e:
-        print("sryzen2")
-
+        print("sryzen2 error:", e)
 
 async def lemem():
     try:
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('wss://dash.lemem.dev/afk/ws', headers=lemem_headers) as ws:
                 async for msg in ws:
-                    print("lemem:", msg)
+                    print("lemem:", msg.data)
     except Exception as e:
-        print("lemem")
+        print("lemem error:", e)
 
 async def main():
     await asyncio.gather(
@@ -45,8 +51,12 @@ async def main():
         lemem()
     )
 
-if __name__ == "__main__":
-    asyncio.run(main())
-
+def run_flask():
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+if __name__ == "__main__":
+    # Start Flask in a thread
+    Thread(target=run_flask, daemon=True).start()
+    # Run WebSocket clients
+    asyncio.run(main())
